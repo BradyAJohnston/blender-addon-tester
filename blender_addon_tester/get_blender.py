@@ -38,7 +38,7 @@ def getSuffix(blender_version, platform=None):
         raise RuntimeError(f"Blender version cannot be guessed in the following string: {blender_version}")
         
     urls = [
-        f"https://ftp.nluug.nl/pub/graphics/blender/release/Blender{rev}",
+        # f"https://ftp.nluug.nl/pub/graphics/blender/release/Blender{rev}",
         "https://builder.blender.org/download/daily",
     ]
     blender_zippath = None
@@ -60,7 +60,7 @@ def getSuffix(blender_version, platform=None):
         for link in soup.find_all("a"):
             x = str(link.get("href"))
             #print(x)   
-            if re.search('blender', x) and re.search(machine, x) and re.search(f"{ext}$", x):
+            if re.search('blender', x) and re.search(machine, x) and re.search(f"{ext}$", x) and re.search("x86", x):
                 g = re.search(f"blender-(.+)", x)         
                 if g:
                     version_found = g.group(1).split("-")[0]
