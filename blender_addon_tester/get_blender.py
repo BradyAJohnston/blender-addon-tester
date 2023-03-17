@@ -13,66 +13,34 @@ from distutils.dir_util import copy_tree
 
 CURRENT_MODULE_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 
-def is_mac_intel(x):
-    machine = "(macOS|darwin)"
-    ext = "(dmg|zip|tar\.gz)"
-    return re.search(machine, x) and re.search(f"{ext}$", x) and re.search("x86|x64", x)
-
-def is_mac_arm(x):
-    machine = "(macOS|darwin)"
-    ext = "(dmg|zip|tar\.gz)"
-    return re.search(machine, x) and re.search(f"{ext}$", x) and re.search("arm64", x)
-
-def is_windows(x):
-    machine = "windows"
-    ext = "zip"
-    return re.search(machine, x) and re.search(f"{ext}$", x) and re.search("amd64", x)
-
-def is_linux(x):
-    machine = "linux"
-    ext = "tar.(xz|gz|bz2)"
-    return re.search(machine, x) and re.search(f"{ext}$", x) and re.search("x86", x)
-
-def first_link(links, check):
-    for link in links:
-        link_string = str(link.get("href"))
-        if check(link_string):
-            return link_string
-    return None
-
-
 def getSuffix(blender_version, platform=None):
     
     if platform is None:
         platform = sys.platform
     print(platform)
     
-    
     if "win32" == platform or "win64" == platform or "cygwin" == platform:
-        platform = "windows"
+        machine = "windows"
+        ext = "zip"
     elif "darwin" == platform:
-        platform = "mac_intel"
+        #machine = "(macOS|OSX)"
+        machine = "(macOS|darwin)"
+        ext = "(dmg|zip|tar\.gz)"
     else:
-        platform = "linux"
+        machine = "linux"
+        ext = "tar.(xz|gz|bz2)"
     
-    find_func = {
-        "windows" : is_windows, 
-        "mac_intel" : is_mac_intel,
-        "mac_arm" : is_mac_arm, 
-        "linux" : is_mac_arm
-    }
     
     g = re.search(f"\d\.\d+", blender_version)
-    
     if g:
         rev = g.group(0)
     else:
         raise RuntimeError(f"Blender version cannot be guessed in the following string: {blender_version}")
         
     urls = [
-        "https://builder.blender.org/download/daily"
+        # f"https://ftp.nluug.nl/pub/graphics/blender/release/Blender{rev}",
+        "https://builder.blender.org/download/daily",
     ]
-    
     blender_zippath = None
     nightly = False
     release_file_found = False
@@ -85,20 +53,35 @@ def getSuffix(blender_version, platform=None):
 
         print(f"FETCHING RELEASES FROM: {url}")
         page = requests.get(url)
-        soup = BeautifulSoup(page.text, features="html.parser")
+        data = page.text
+        soup = BeautifulSoup(data, features="html.parser")
         
         blender_version_suffix = ""
-        link = first_link(soup.find_all("a"), find_func.get(platform))
-        print("This is the link" + str(link))
-        if not link:
-            raise Exception("Unable to find a suitable blender version to download.")
-        
-        if link.startswith("https"):
-            blender_zippath = f"{links[rev]}"
-        else:
-            blender_zippath = f"{url}/{links[rev]}"
-    print(blender_zippath)
-    print(nightly)
+        for link in soup.find_all("a"):
+            x = str(link.get("href"))
+            #print(x)   
+            if re.search('blender', x) and re.search(machine, x) and re.search(f"{ext}$", x) and re.search("x86|x64", x):
+                g = re.search(f"blender-(.+)", x)         
+                if g:
+                    version_found = g.group(1).split("-")[0]
+                    if not version_found in versions_found[url]:
+                        versions_found[url].append(version_found)
+                        links[version_found] = x
+            
+    for url in versions_found.keys():
+        for rev in sorted(versions_found[url], reverse=True):
+            if rev.startswith(blender_version):
+                link = links[rev]
+                if link.startswith("http"):
+                    blender_zippath = f"{links[rev]}"
+                else:
+                    blender_zippath = f"{url}/{links[rev]}"
+                break
+                        
+    if None == blender_zippath:
+        #print(soup)
+        raise Exception(f"Unable to find {blender_version} in nightlies, here is what is available {versions_found}")
+    
     return blender_zippath, nightly
 
 def findMacOSContentsParentDirectory(starting_path):
