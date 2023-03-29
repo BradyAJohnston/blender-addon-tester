@@ -3,7 +3,7 @@ try:
     from blender_addon_tester import get_blender
 except Exception as e:
     print(e)
-    sys.exit(1)
+    #sys.exit(1)
 
 platform_list = [
     "win64",

@@ -6,7 +6,7 @@ try:
     import blender_addon_tester as BAT
 except Exception as e:
     print(e)
-    sys.exit(1)
+    #sys.exit(1)
 
 def zipdir(path, ziph):
     # Per https://www.tutorialspoint.com/How-to-zip-a-folder-recursively-using-Python

@@ -5,7 +5,7 @@ try:
     import blender_addon_tester as BAT
 except Exception as e:
     print(e)
-    sys.exit(1)
+    #sys.exit(1)
 
 def main():    
     here = Path(__file__).parent

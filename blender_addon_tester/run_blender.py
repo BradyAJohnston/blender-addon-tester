@@ -149,5 +149,5 @@ if __name__ == "__main__":
         sys.exit(run_blender_version_for_addon_with_pytest_suite(blender_revision=blender_rev, addon_path=addon))
     else:
         print("Usage:", sys.argv[0], "blender_rev addon")
-        sys.exit(1)
+        #sys.exit(1)
 

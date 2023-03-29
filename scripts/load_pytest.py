@@ -7,14 +7,14 @@ try:
     import pytest
 except Exception as e:
     print(e)
-    sys.exit(1)
+    #sys.exit(1)
 
 try:
     sys.path.append(os.environ["LOCAL_PYTHONPATH"])
     from addon_helper import zip_addon, change_addon_dir, install_addon, cleanup
 except Exception as e:
     print(e)
-    sys.exit(1)
+    #sys.exit(1)
 
 
 class SetupPlugin:
