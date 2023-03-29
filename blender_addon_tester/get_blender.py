@@ -104,7 +104,7 @@ def findMacOSContentsParentDirectory(starting_path):
     
     if not osx_mounted_contents_parent:
         print(f"Error, could not find some [bB]lender.app/Contents directory in downloaded {blender_zipfile} dmg archive")
-        exit(1)
+       # exit(1)
 
     os.chdir(cwd)
     
@@ -180,7 +180,7 @@ def getBlender(blender_version, blender_zippath, nightly):
         zdir = zfiles[0].split("/")[0]
     else:
         print("Error, unknown archive extension: {blender_zipfile}. Will not extract it.}")
-        exit(1)
+       # exit(1)
 
     if not os.path.isdir(zdir):
         # OSX directories are not always recognized by os.path.isdir, so skipping OSX situations here
@@ -221,7 +221,7 @@ def getBlender(blender_version, blender_zippath, nightly):
             os.chmod(executable_path, stat.S_IXOTH | stat.S_IXGRP | stat.S_IXUSR)
         else:
             print("Error, Blender MacOS executable not found in directory:", expected_executable_dir, "glob result:", executable_path, "files in target directory:", os.listdir(expected_executable_dir))
-            exit(1)
+           # exit(1)
  
         zfiles = []
         for root, directories, filenames in os.walk(zdir):
@@ -238,7 +238,7 @@ def getBlender(blender_version, blender_zippath, nightly):
             break
     if not python:
         print("ERROR, Blender's bundled python executable could not be found within Blender's files")
-        exit(1)
+       # exit(1)
 
     cmd = f"{python} -m ensurepip"
     os.system(cmd)
@@ -271,7 +271,7 @@ def get_blender_from_suffix(blender_version):
 if __name__ == "__main__":
     if "cygwin" == sys.platform:
         print("ERROR, do not run this under cygwin, run it under Linux and Windows cmd!!")
-        exit(1)
+       # exit(1)
 
     if len(sys.argv) > 1:
         blender_rev = sys.argv[1]
