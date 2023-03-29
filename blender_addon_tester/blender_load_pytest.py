@@ -13,9 +13,9 @@ except Exception as e:
 
 # Make sure to have BLENDER_ADDON_TO_TEST set as an environment variable first
 ADDON = os.environ.get("BLENDER_ADDON_TO_TEST", False)
-if not ADDON:
-    print("No addon to test was found in the 'BLENDER_ADDON_TO_TEST' environment variable. Exiting.")
-    sys.exit(1)
+# if not ADDON:
+    # print("No addon to test was found in the 'BLENDER_ADDON_TO_TEST' environment variable. Exiting.")
+    # sys.exit(1)
 
 # Set any value to the BLENDER_ADDON_COVERAGE_REPORTING environment variable to enable it
 COVERAGE_REPORTING = os.environ.get("BLENDER_ADDON_COVERAGE_REPORTING", False)
@@ -25,12 +25,12 @@ TESTS_PATH = os.environ.get("BLENDER_ADDON_TESTS_PATH", default_tests_dir.as_pos
 # Add explict pytest commands, just in case fine control is required
 PYTEST_ARGS = os.environ.get("BLENDER_PYTEST_ARGS", "")
 
-try:
-    sys.path.append(os.environ["LOCAL_PYTHONPATH"])
-    from addon_helper import zip_addon, change_addon_dir, install_addon, cleanup
-except Exception as e:
-    print(e)
-    sys.exit(1)
+#try:
+sys.path.append(os.environ["LOCAL_PYTHONPATH"])
+from addon_helper import zip_addon, change_addon_dir, install_addon, cleanup
+#except Exception as e:
+ #   print(e)
+  #  sys.exit(1)
 
 # This is needed for windows, doesn't seem to affect linux
 addon_helper = os.environ.get("ADDON_TEST_HELPER", None)
