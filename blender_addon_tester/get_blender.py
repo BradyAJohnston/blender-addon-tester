@@ -40,6 +40,7 @@ def getSuffix(blender_version, platform=None):
     urls = [
         # f"https://ftp.nluug.nl/pub/graphics/blender/release/Blender{rev}",
         "https://builder.blender.org/download/daily",
+        # "https://www.blender.org/download/"
     ]
     blender_zippath = None
     nightly = False
@@ -60,7 +61,7 @@ def getSuffix(blender_version, platform=None):
         for link in soup.find_all("a"):
             x = str(link.get("href"))
             #print(x)   
-            if re.search('blender', x) and re.search(machine, x) and re.search(f"{ext}$", x) and re.search("x86|x64", x):
+            if re.search('blender', x) and re.search(machine, x) and re.search(f"{ext}$", x) and re.search("x86|x64|", x):
                 g = re.search(f"blender-(.+)", x)         
                 if g:
                     version_found = g.group(1).split("-")[0]
